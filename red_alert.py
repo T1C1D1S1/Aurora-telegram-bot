@@ -10,19 +10,24 @@ SERVER = 'http://80.179.114.130/api2/stt.php'  # gets latest feed
 
 class Alert():
     def __init__(self):
-        self.feed = self._get_feed()
+        self.feed = self._extract_ids(self._get_feed())
 
     def run(self):
         while True:
             self._check_for_update()
             sleep(1)
 
+    def _extract_ids(self, feed):
+        return list(map(lambda x: x['id'], feed))
+
     def _check_for_update(self):
         new_feed = self._get_feed()
-        updates_to_push = filter(lambda x: x not in self.feed, new_feed)
+        updates_to_push = filter(lambda x: x['id'] not in self.feed, new_feed)
+        print(self.feed)
         print(new_feed)
-        self.feed = new_feed
+        self.feed = self._extract_ids(new_feed)
         for alert in updates_to_push:
+            print(alert)
             self._notify(alert)
 
     @staticmethod
