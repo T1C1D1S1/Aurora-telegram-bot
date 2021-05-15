@@ -3,7 +3,6 @@ from hashlib import md5
 from time import time, sleep
 import requests
 
-
 HASH_PART_1 = b"@Kobi*Snir-"
 HASH_PART_2 = b"-#iOSLinks!"
 SERVER = 'http://80.179.114.130/api2/stt.php'  # gets latest feed
@@ -23,7 +22,7 @@ class Alert():
                 for update in updates:
                     updates.remove(update)
                     self._notify(update)
-            sleep(1)
+            sleep(3)
 
     def _get_ids(self):
         return list(map(lambda x: x['id'], self.feed))
