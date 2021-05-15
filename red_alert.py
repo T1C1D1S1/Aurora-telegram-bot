@@ -17,17 +17,14 @@ class Alert():
     def run_loop(self):
         print('Alerts is running...')
         while True:
-            updates = self._check_for_update()
+            updates = self.check_for_update()
             if updates:
                 for update in updates:
                     updates.remove(update)
-                    self._notify(update)
+                    self.notify_heb(update)
             sleep(3)
 
-    def _get_ids(self):
-        return list(map(lambda x: x['id'], self.feed))
-
-    def _check_for_update(self):
+    def check_for_update(self):
         new_feed = self._get_feed()
         updates_to_push = list(filter(lambda x: x['id'] not in self.ids, new_feed))
         if updates_to_push:
@@ -35,8 +32,17 @@ class Alert():
             return updates_to_push
 
     @staticmethod
-    def _notify(alert):
+    def notify_eng(alert):
         print(f'new red alert at {alert["message"]} at time {alert["date"]}')
+
+
+    @staticmethod
+    def notify_heb(alert):
+        print(f'{alert["date"]}\nהתראת צבע אדום ב{alert["message"]}')
+
+
+    def _get_ids(self):
+        return list(map(lambda x: x['id'], self.feed))
 
     @staticmethod
     def _get_feed():
