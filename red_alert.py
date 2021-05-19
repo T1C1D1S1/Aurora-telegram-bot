@@ -16,7 +16,7 @@ class Alert(object):
         An object for Israel's "Red Alert" system. gets updates for new alarms and displays their regions.
         """
         self.feed = self._get_feed()
-        self.ids = self._get_ids()
+        self.ids = self._get_ids(self.feed)
 
     def run_loop(self):
         """
@@ -39,7 +39,7 @@ class Alert(object):
         new_feed = self._get_feed()
         updates_to_push = list(filter(lambda x: x['id'] not in self.ids, new_feed))
         if updates_to_push:
-            self.ids = self._get_ids()
+            self.ids = self._get_ids(new_feed)
             return updates_to_push
 
     @staticmethod
@@ -51,8 +51,9 @@ class Alert(object):
         """
         return f'{alert["date"]}\n{alert["message"]}'
 
-    def _get_ids(self) -> List[str]:
-        return list(map(lambda x: x['id'], self.feed))
+    @staticmethod
+    def _get_ids(feed) -> List[str]:
+        return list(map(lambda x: x['id'], feed))
 
     @staticmethod
     def _get_feed() -> List[dict]:
@@ -65,7 +66,7 @@ class Alert(object):
         try:
             result = requests.post(SERVER, data={'method': 'getFeed', 'ts': timestamp, 'hash': request_hash})
         except ConnectionError:
-            sleep(3)
+            sleep(8)
             result = requests.post(SERVER, data={'method': 'getFeed', 'ts': timestamp, 'hash': request_hash})
         return result.json()['feed']
 
