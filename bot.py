@@ -7,6 +7,7 @@ import logging
 from snake import snake
 import threading
 from time import sleep
+from inspiration import *
 
 # Enable logging
 logging.basicConfig(
@@ -71,15 +72,27 @@ class AuroraBot(object):
                                              text=alerts.notify(new_alert))
             sleep(4)
 
+    def _send_inspiration_text(self, update, context):
+        quote = inspiration_text()
+        context.bot.send_message(chat_id=update.effective_message.chat_id, text=quote)
+
+    def _send_inspiration_image(self, update, context):
+        image_url = insperation_image_url()
+        context.bot.send_photo(chat_id=update.effective_message.chat_id, photo=image_url)
+
     def run(self):
         snake_handler = CommandHandler('snake', self._send_snake)
         red_alert_start_handler = CommandHandler('start', self._start_red_alert)
         red_alert_stop_handler = CommandHandler('stop', self._stop_red_alert)
         ping_handler = CommandHandler('ping', self._bot_ping)
+        inspire_image_handler = CommandHandler('inspireimg', self._send_inspiration_image)
+        inspire_text_handler = CommandHandler('inspire', self._send_inspiration_text)
         self.dispatcher.add_handler(snake_handler)
         self.dispatcher.add_handler(red_alert_start_handler)
         self.dispatcher.add_handler(red_alert_stop_handler)
         self.dispatcher.add_handler(ping_handler)
+        self.dispatcher.add_handler(inspire_image_handler)
+        self.dispatcher.add_handler(inspire_text_handler)
         self.updater.start_polling()
 
 
