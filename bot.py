@@ -2,12 +2,12 @@
 from typing import List
 
 from telegram.ext import Updater, CommandHandler
-from red_alert import Alert
 import logging
-from snake import snake
 import threading
 from time import sleep
-from inspiration import *
+from modules.red_alert import Alert
+from modules.snake import snake
+from modules.inspiration import get_inspiration_text, get_inspiration_image_url
 
 # Enable logging
 logging.basicConfig(
@@ -73,11 +73,11 @@ class AuroraBot(object):
             sleep(4)
 
     def _send_inspiration_text(self, update, context):
-        quote = inspiration_text()
+        quote = get_inspiration_text()
         context.bot.send_message(chat_id=update.effective_message.chat_id, text=quote)
 
     def _send_inspiration_image(self, update, context):
-        image_url = insperation_image_url()
+        image_url = get_inspiration_image_url()
         context.bot.send_photo(chat_id=update.effective_message.chat_id, photo=image_url)
 
     def run(self):
