@@ -1,9 +1,10 @@
-from random import choice
+import json
+import random
 
 
 def snake():
-    snakes = json.load(open('available_snakes.json', 'r'))
-    return choice(snakes)
+    snakes = json.load(open('./modules/snake/available_snakes.json', 'r'))
+    return random.choice(snakes)
 
 
 if __name__ == '__main__':
